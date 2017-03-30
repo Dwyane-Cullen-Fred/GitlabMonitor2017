@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectCommit">
+
+    <resultMap id="projectCommit" type="org.bean.ProjectCommit" >
+        <result property="id" column="id" />
+        <result property="team" column="team" />
+        <result property="day" column="day" typeHandler="org.apache.ibatis.type.LocalDateTypeHandler"/>
+        <result property="commit_count" column="commit_count" />
+        <result property="add_line" column="add_line" />
+        <result property="delete_line" column="delete_line" />
+        <result property="java_file" column="java_file" />
+        <result property="total_commit" column="total_commit" />
+        <result property="total_add" column="total_add" />
+        <result property="total_delete" column="total_delete" />
+    </resultMap>
+
+    <resultMap id="dayCommit" type="org.bean.DayCommit" >
+        <result property="day" column="day" typeHandler="org.apache.ibatis.type.LocalDateTypeHandler"/>
+        <result property="commit_count" column="day_commit" />
+        <result property="add_line" column="day_add_line" />
+        <result property="delete_line" column="day_delete_line" />
+        <result property="java_file" column="day_java_file" />
+    </resultMap>
+
+
+    <select id="selectProjectCommitGroupByDay" resultMap="dayCommit">
+        SELECT day,
+               SUM(commit_count) as day_commit,
+               sum(add_line) as day_add_line,
+               sum(delete_line) as day_delete_line,
+               sum(java_file) as day_java_file
+        FROM projectCommitv1 WHERE day > '2016-02-01' group BY day;
+    </select>
+
+    <select id="selectProjectCommitGroupById" resultMap="projectCommit" >
+          SELECT * FROM projectCommitv1 WHERE id = #{id} ORDER BY day ;
+    </select>
+
+</mapper>

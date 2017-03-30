@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="studentCommit">
+
+    <resultMap id="studentCommit" type="org.bean.StudentCommit" >
+        <result property="id" column="id" />
+        <result property="student" column="student" />
+        <result property="day" column="day" typeHandler="org.apache.ibatis.type.LocalDateTypeHandler"/>
+        <result property="commit_count" column="commit_count" />
+        <result property="add_line" column="add_line" />
+        <result property="delete_line" column="delete_line" />
+        <result property="java_file" column="java_line" />
+        <result property="total_commit" column="total_commit" />
+        <result property="total_add" column="total_add" />
+        <result property="total_delete" column="total_delete" />
+    </resultMap>
+
+    <select id="selectStudentCommitById" resultMap="studentCommit" >
+        SELECT * from studentCommitv1 WHERE id = #{id};
+    </select>
+
+    <select id="selectStudentCommitByDeadline" resultMap="studentCommit" >
+        SELECT * from studentCommitv1
+        WHERE
+        id = #{id}
+        and
+        studentCommitv1.`day` = (SELECT deadline.end_day FROM deadline WHERE deadline.id = #{deadline_id})
+    </select>
+</mapper>

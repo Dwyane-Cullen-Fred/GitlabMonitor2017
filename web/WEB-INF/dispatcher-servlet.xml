@@ -10,6 +10,7 @@
                            http://www.springframework.org/schema/mvc
                            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <mvc:annotation-driven />
 
     <context:component-scan base-package="org.controller" />
     <context:component-scan base-package="org.service" />
@@ -20,10 +21,22 @@
     <mvc:default-servlet-handler />
     <mvc:annotation-driven enable-matrix-variables="true"/>
 
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           id="internalResourceView">
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
+    </bean>
+
+    <bean id="jsonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonHttpMessageConverter" />
+            </list>
+        </property>
     </bean>
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" >
