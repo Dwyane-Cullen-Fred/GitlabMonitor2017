@@ -17,15 +17,52 @@
         <result property="total_delete" column="total_delete" />
     </resultMap>
 
+    <resultMap id="iterationStudentCommit" type="org.bean.IterationStudentCommit">
+        <result property="id" column="id" />
+        <result property="student" column="student" />
+        <result property="total_commit" column="total_commit_count" />
+        <result property="total_add" column="total_add_line" />
+        <result property="total_delete" column="total_del_line" />
+    </resultMap>
+
     <select id="selectStudentCommitById" resultMap="studentCommit" >
         SELECT * from studentCommitv1 WHERE id = #{id};
     </select>
 
-    <select id="selectStudentCommitByDeadline" resultMap="studentCommit" >
-        SELECT * from studentCommitv1
+    <select id="selectStudentCommit" resultMap="iterationStudentCommit" >
+        SELECT
+        studentCommitv1.id,
+        studentCommitv1.student,
+        SUM(studentCommitv1.commit_count) as total_commit_count,
+        SUM(studentCommitv1.add_line) as total_add_line,
+        SUM(studentCommitv1.delete_line) as total_del_line
+        FROM studentCommitv1
         WHERE
         id = #{id}
-        and
-        studentCommitv1.`day` = (SELECT deadline.end_day FROM deadline WHERE deadline.id = #{deadline_id})
+        <![CDATA[
+            AND
+            studentCommitv1.`day` >= (SELECT deadline.start_day FROM deadline WHERE deadline.id = 1)
+            AND
+            studentCommitv1.`day` <= (SELECT deadline.end_day FROM deadline WHERE deadline.id = 3)
+        ]]>
+        GROUP BY studentCommitv1.id, studentCommitv1.student
+    </select>
+
+    <select id="selectStudentIterationCommit" resultMap="iterationStudentCommit" >
+        SELECT
+        studentCommitv1.id,
+        studentCommitv1.student,
+        SUM(studentCommitv1.commit_count) as total_commit_count,
+        SUM(studentCommitv1.add_line) as total_add_line,
+        SUM(studentCommitv1.delete_line) as total_del_line
+        FROM studentCommitv1
+        WHERE id = #{id}
+        <![CDATA[
+        AND
+        studentCommitv1.`day` > (SELECT deadline.start_day FROM deadline WHERE deadline.id = #{deadline_id})
+        AND
+        studentCommitv1.`day` <= (SELECT deadline.end_day FROM deadline WHERE deadline.id = #{deadline_id})
+        GROUP BY id, studentCommitv1.student
+        ]]>
     </select>
 </mapper>

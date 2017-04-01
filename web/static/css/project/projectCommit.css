@@ -1,0 +1,15 @@
+.my-col-lg-2{
+    padding-right: 0;
+}
+
+.project_panel, .student_panel {
+    display: none;
+}
+
+.show_bottom_border {
+    border-bottom: 2px solid lightgrey;
+}
+
+canvas.pie_container {
+    height: 30px;
+}

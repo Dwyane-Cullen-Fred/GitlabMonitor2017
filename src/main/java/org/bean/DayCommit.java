@@ -8,11 +8,11 @@ import java.time.LocalDate;
  */
 public class DayCommit {
 
-    private LocalDate day;
-    private int commit_count;
-    private int add_line;
-    private int delete_line;
-    private int java_file;
+    private LocalDate day;                               //提交日期
+    private int commit_count;                            //当天的提交量
+    private int add_line;                                //当天的增加代码
+    private int delete_line;                             //当天的删除行数
+    private int java_file;                               //当天的文件数
 
     public LocalDate getDay() {
         return day;

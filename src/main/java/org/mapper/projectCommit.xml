@@ -39,4 +39,14 @@
           SELECT * FROM projectCommitv1 WHERE id = #{id} ORDER BY day ;
     </select>
 
+    <select id="selectProjectIterationCommit" resultMap="projectCommit">
+        SELECT * FROM projectCommitv1 WHERE id = #{id}
+        AND
+        <![CDATA[
+        projectCommitv1.`day` > (SELECT deadline.start_day FROM deadline WHERE deadline.id = #{deadline_id})
+        AND
+        projectCommitv1.`day` <= (SELECT deadline.end_day FROM deadline WHERE deadline.id = #{deadline_id})
+        ]]>
+        ORDER BY projectCommitv1.`day`
+    </select>
 </mapper>

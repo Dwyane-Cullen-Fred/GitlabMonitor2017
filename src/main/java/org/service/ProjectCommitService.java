@@ -33,4 +33,14 @@ public class ProjectCommitService {
     public List<ProjectCommit> getProjectCommitById(int id) {
         return projectCommitDao.selectProjectCommitById(id);
     }
+
+    /**
+     *
+     * @param id : 项目id
+     * @param iteration_id ： 迭代id
+     * @return
+     */
+    public List<ProjectCommit> getProjectIterationCommit(int id, int iteration_id) {
+        return projectCommitDao.selectProjectIterationCommit(id, iteration_id);
+    }
 }

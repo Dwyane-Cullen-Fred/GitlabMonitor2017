@@ -2,17 +2,14 @@ package org.controller;
 
 import com.google.gson.Gson;
 import org.bean.DayCommit;
-import org.bean.ProjectCommit;
 import org.service.ProjectCommitService;
 import org.service.StudentCommitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
@@ -24,23 +21,32 @@ public class projectController {
 
     @Autowired
     private StudentCommitService studentCommitService;
+    /**
+     * @return ： 显示的页面
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/projectCommit/All")
+    public String showCommit() {
+        return "allCommit";
+    }
 
     /**
-     *
-     * @return ： 每天提交信息的json格式
+     * @return : 项目信息显示页面
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/projectCommit/detail")
+    public String showProjectCommit() {
+        return "projectCommit";
+    }
+
+
+/*---------------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * @return ： 每天所有项目提交信息的json格式
      */
     @RequestMapping(method = RequestMethod.GET, value = "/data/dayCommitData")
     public @ResponseBody String getDayCommitData(){
         List<DayCommit> list = projectCommitService.getProjectCommitGroupByDay();
         return new Gson().toJson(list);
-    }
-
-    /**
-     * @return ： 显示的页面
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/projectCommit/home")
-    public String showCommit() {
-        return "allCommit";
     }
 
     /**
@@ -53,27 +59,27 @@ public class projectController {
     }
 
     /**
-     * @param id
-     * @param deadline_id
-     * @return
+     * @param id : 项目id
+     * @param iteration_id : 迭代的id
+     * @return ： 项目迭代的提交信息
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/deadline/{deadline_id}")
-    public @ResponseBody String getStudentCommitData(@PathVariable int id, @PathVariable int deadline_id) {
-        return new Gson().toJson(studentCommitService.getStudentCommitByDeadline(id, deadline_id));
+    @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/iteration/{iteration_id}")
+    public @ResponseBody String getProjectIterationCommit(@PathVariable int id, @PathVariable int iteration_id) {
+        return new Gson().toJson(projectCommitService.getProjectIterationCommit(id, iteration_id));
     }
 
     /**
      * @param id : 项目id
-     * @return : 项目信息显示页面
+     * @return ： 项目最终的学生提交情况
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/projectCommit/{id}")
-    public String showProjectCommit(@PathVariable int id) {
-        return "projectCommit";
+    @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/studentCommit")
+    public @ResponseBody String getStudentCommitData(@PathVariable int id) {
+        return new Gson().toJson(studentCommitService.getStudentCommit(id));
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/base")
-    public String base() {
-        return "base";
+    @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/studentCommit/iteration/{iteration_id}")
+    public @ResponseBody String getIterationStudentCommitData(@PathVariable int id, @PathVariable int iteration_id) {
+        return new Gson().toJson(studentCommitService.selectStudentIterationCommit(id, iteration_id));
     }
 }
