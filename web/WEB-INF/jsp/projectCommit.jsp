@@ -44,7 +44,7 @@
                             <a href="#">迭代三</a>
                         </li>
                     </ul>
-
+                    <%--project_panel--%>
                     <div id="project_panel" class="project_panel">
                         <div>
                             <h2 id="project_information"></h2>
@@ -54,6 +54,7 @@
                         </div>
                     </div>
                     <div class="blank_div"></div>
+                    <%--student_panel--%>
                     <div id="student_panel" class="row student_panel">
                         <div>
                             <h2>学生提交情况</h2>
@@ -85,6 +86,14 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="blank_div"></div>
+                    <%--connection_panel--%>
+                    <div id="connection_panel" class="row" >
+                        <h2>组内协作展示</h2>
+                        <svg id = "connection_svg" class="connection_svg">
+
+                        </svg>
                     </div>
                 </div>
 

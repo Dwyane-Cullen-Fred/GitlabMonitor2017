@@ -5,11 +5,35 @@
 .project_panel, .student_panel {
     display: none;
 }
-
+#connection_panel {
+    display: none;
+}
 .show_bottom_border {
     border-bottom: 2px solid lightgrey;
 }
 
 canvas.pie_container {
     height: 30px;
+}
+
+svg.connection_svg {
+    margin-left: 10%;
+    width: 400px;
+    height: 300px;
+}
+
+.node {
+    fill: red;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: blue;
+}
+
+.circle_text{
+    text-anchor: middle;
+    stroke: black;
+    stroke-width :"2px";
 }

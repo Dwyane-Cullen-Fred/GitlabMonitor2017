@@ -1,5 +1,6 @@
 package org.service;
 
+import org.bean.Connection;
 import org.bean.IterationStudentCommit;
 import org.bean.StudentCommit;
 import org.dao.StudentCommitDao;
@@ -7,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by XXH on 2017/3/29.
@@ -44,7 +42,16 @@ public class StudentCommitService {
      * @param iteration_id : 迭代的id
      * @return ： 每个迭代中每个学生的贡献
      */
-    public List<IterationStudentCommit> selectStudentIterationCommit(int id, int iteration_id) {
+    public List<IterationStudentCommit> getStudentIterationCommit(int id, int iteration_id) {
         return studentCommitDao.selectStudentIterationCommit(id, iteration_id);
+    }
+
+    /**
+     *
+     * @param id : 项目id
+     * @return ：项目中学生之间的联系
+     */
+    public Set<Connection> getStudentConnection(int id) {
+        return new HashSet<Connection>(studentCommitDao.selectStudentConnection(id));
     }
 }

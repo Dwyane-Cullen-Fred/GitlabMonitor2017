@@ -25,6 +25,12 @@
         <result property="total_delete" column="total_del_line" />
     </resultMap>
 
+    <resultMap id="Connection" type="org.bean.Connection">
+        <result property="connectionCount" column="connection_count" />
+        <result property="member1" column="author_name1" />
+        <result property="member2" column="author_name2" />
+    </resultMap>
+
     <select id="selectStudentCommitById" resultMap="studentCommit" >
         SELECT * from studentCommitv1 WHERE id = #{id};
     </select>
@@ -64,5 +70,30 @@
         studentCommitv1.`day` <= (SELECT deadline.end_day FROM deadline WHERE deadline.id = #{deadline_id})
         GROUP BY id, studentCommitv1.student
         ]]>
+    </select>
+
+    <select id="selectStudentConnection" resultMap="Connection">
+        SELECT
+        COUNT(a.filename) as connection_count,
+        a.author_name as author_name1,
+        b.author_name as author_name2
+        FROM
+        (
+        (SELECT DISTINCT filename, author_name
+        from filev1, commitv1 WHERE
+        commitv1.projectid = #{id}
+        <![CDATA[
+        AND commitv1.add_line < 3000 and filename LIKE "%java"
+        and filev1.sha = commitv1.id) as a,
+        (SELECT DISTINCT filename, author_name
+        from filev1, commitv1 WHERE
+        commitv1.projectid = #{id}
+        AND commitv1.add_line < 3000 and filename LIKE "%java"
+        and filev1.sha = commitv1.id) as b
+        )
+        WHERE a.filename = b.filename AND a.author_name <> b.author_name
+        GROUP BY author_name1, author_name2
+        ]]>
+
     </select>
 </mapper>

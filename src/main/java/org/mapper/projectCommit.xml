@@ -35,7 +35,7 @@
         FROM projectCommitv1 WHERE day > '2016-02-01' group BY day;
     </select>
 
-    <select id="selectProjectCommitGroupById" resultMap="projectCommit" >
+    <select id="selectProjectCommitById" resultMap="projectCommit" >
           SELECT * FROM projectCommitv1 WHERE id = #{id} ORDER BY day ;
     </select>
 
@@ -48,5 +48,9 @@
         projectCommitv1.`day` <= (SELECT deadline.end_day FROM deadline WHERE deadline.id = #{deadline_id})
         ]]>
         ORDER BY projectCommitv1.`day`
+    </select>
+
+    <select id="selectProjectCommitByTeam" resultMap="projectCommit" >
+        SELECT * from projectCommitv1 WHERE team = #{team}
     </select>
 </mapper>

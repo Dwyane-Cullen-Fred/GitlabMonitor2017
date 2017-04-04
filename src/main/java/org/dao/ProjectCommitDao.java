@@ -29,7 +29,15 @@ public class ProjectCommitDao extends BaseDaoImpl{
      * @return : 对应项目的提交情况
      */
     public List<ProjectCommit> selectProjectCommitById(int id) {
-        return sqlSession.selectList("projectCommit.selectProjectCommitGroupById", id);
+        return sqlSession.selectList("projectCommit.selectProjectCommitById", id);
+    }
+
+    /**
+     * @param team : 团队名称
+     * @return ： 对应项目的提交情况
+     */
+    public List<ProjectCommit> selectProjectCommitByTeam(String team) {
+        return sqlSession.selectList("projectCommit.selectProjectCommitByTeam", team);
     }
 
     /**

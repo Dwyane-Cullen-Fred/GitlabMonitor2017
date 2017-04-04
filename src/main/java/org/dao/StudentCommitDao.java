@@ -1,5 +1,6 @@
 package org.dao;
 
+import org.bean.Connection;
 import org.bean.IterationStudentCommit;
 import org.bean.StudentCommit;
 import org.springframework.stereotype.Repository;
@@ -40,5 +41,14 @@ public class StudentCommitDao extends BaseDaoImpl{
         map.put("id", id);
         map.put("deadline_id", deadline_id);
         return sqlSession.selectList("studentCommit.selectStudentIterationCommit", map);
+    }
+
+    /**
+     *
+     * @param id : 项目id
+     * @return ： 项目中学生之间的关联度
+     */
+    public List<Connection> selectStudentConnection(int id) {
+        return sqlSession.selectList("studentCommit.selectStudentConnection", id);
     }
 }
