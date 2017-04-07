@@ -25,10 +25,20 @@
         <result property="total_delete" column="total_del_line" />
     </resultMap>
 
-    <resultMap id="Connection" type="org.bean.Connection">
+    <resultMap id="connection" type="org.bean.Connection">
         <result property="connectionCount" column="connection_count" />
         <result property="member1" column="author_name1" />
         <result property="member2" column="author_name2" />
+    </resultMap>
+
+    <resultMap id="studentValidCommit" type="org.bean.ValidCommit">
+        <result property="member" column="author_name" />
+        <result property="total_add" column="total_add" />
+        <result property="total_delete" column="total_delete" />
+        <result property="total_file" column="total_file" />
+        <result property="valid_add" column="valid_add" />
+        <result property="valid_delete" column="valid_delete" />
+        <result property="valid_file" column="valid_file" />
     </resultMap>
 
     <select id="selectStudentCommitById" resultMap="studentCommit" >
@@ -72,7 +82,7 @@
         ]]>
     </select>
 
-    <select id="selectStudentConnection" resultMap="Connection">
+    <select id="selectStudentConnection" resultMap="connection">
         SELECT
         COUNT(a.filename) as connection_count,
         a.author_name as author_name1,
@@ -93,6 +103,40 @@
         )
         WHERE a.filename = b.filename AND a.author_name <> b.author_name
         GROUP BY author_name1, author_name2
+        ]]>
+
+    </select>
+
+    <select id="selectStudentValidCommit" resultMap="studentValidCommit">
+        <![CDATA[
+            SELECT t1.author_name,
+            t2.total_add,
+            t2.total_delete,
+            t2.total_file,
+            t1.valid_add,
+            t1.valid_delete,
+            t1.valid_file
+            FROM
+            (SELECT author_name,
+            sum(add_line) as valid_add ,
+            sum(delete_line) as valid_delete,
+            sum(file) as valid_file
+            from
+            (SELECT author_name, add_line, delete_line, file FROM commitv1, filev1
+            WHERE commitv1.id = filev1.sha
+            AND commitv1.projectid = #{id}
+            AND filename LIKE "%src%java" and add_line < 2000
+            GROUP BY id) as a GROUP BY a.author_name) as t1,
+            (SELECT author_name,
+            sum(add_line) as total_add,
+            sum(delete_line) as total_delete,
+            sum(file) as total_file
+            from
+            (SELECT author_name, add_line, delete_line, file FROM commitv1, filev1
+            WHERE commitv1.id = filev1.sha
+            AND commitv1.projectid = #{id}
+            GROUP BY id) as a GROUP BY a.author_name) as t2
+            WHERE t1.author_name = t2.author_name
         ]]>
 
     </select>

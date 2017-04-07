@@ -72,8 +72,22 @@ public class DataAPIController {
         return new Gson().toJson(studentCommitService.getStudentIterationCommit(id, iteration_id));
     }
 
+    /**
+     *
+     * @param id ： 项目的id
+     * @return ： 项目中学生的联系
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/studentConnection")
     public @ResponseBody String getStudentConnection(@PathVariable int id) {
         return new Gson().toJson(studentCommitService.getStudentConnection(id));
+    }
+
+    /**
+     * @param id : 项目中id
+     * @return ： 项目中学生的有效提交代码
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/studentValidCommit")
+    public @ResponseBody String getStudentValidCommit(@PathVariable int id) {
+        return new Gson().toJson(studentCommitService.getStudentValidCommit(id));
     }
 }

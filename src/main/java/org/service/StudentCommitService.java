@@ -3,6 +3,7 @@ package org.service;
 import org.bean.Connection;
 import org.bean.IterationStudentCommit;
 import org.bean.StudentCommit;
+import org.bean.ValidCommit;
 import org.dao.StudentCommitDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,13 @@ public class StudentCommitService {
      */
     public Set<Connection> getStudentConnection(int id) {
         return new HashSet<Connection>(studentCommitDao.selectStudentConnection(id));
+    }
+
+    /**
+     * @param id : 项目id
+     * @return ： 项目中学生的有效提交
+     */
+    public List<ValidCommit> getStudentValidCommit(int id) {
+        return studentCommitDao.selectStudentValidCommit(id);
     }
 }

@@ -2,10 +2,11 @@
     padding-right: 0;
 }
 
-.project_panel, .student_panel {
+.project_panel, .student_panel{
     display: none;
 }
-#connection_panel {
+
+#connection_panel, #valid_commit{
     display: none;
 }
 .show_bottom_border {

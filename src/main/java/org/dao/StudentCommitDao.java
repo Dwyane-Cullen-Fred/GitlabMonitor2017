@@ -3,6 +3,7 @@ package org.dao;
 import org.bean.Connection;
 import org.bean.IterationStudentCommit;
 import org.bean.StudentCommit;
+import org.bean.ValidCommit;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -50,5 +51,14 @@ public class StudentCommitDao extends BaseDaoImpl{
      */
     public List<Connection> selectStudentConnection(int id) {
         return sqlSession.selectList("studentCommit.selectStudentConnection", id);
+    }
+
+    /**
+     *
+     * @param id : 项目的id
+     * @return ： 学生的有效提交情况
+     */
+    public List<ValidCommit> selectStudentValidCommit(int id){
+        return sqlSession.selectList("studentCommit.selectStudentValidCommit", id);
     }
 }

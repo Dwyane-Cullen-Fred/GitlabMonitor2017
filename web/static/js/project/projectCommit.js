@@ -19,7 +19,8 @@ var nodesThreeXY = [
 var project_line_chart = null,
     student_total_commit_chart = null,
     student_total_add_chart = null,
-    student_total_del_char = null;
+    student_total_del_char = null,
+    student_valid_commit_chart = null;
 
 function drawProject(url, callback) {
     var xhttp;
@@ -219,7 +220,7 @@ function drawConnection(url) {
     }
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            object = this.responseText;
+            object = this.response;
             if (object.toString() === "[]") {
                 document.getElementById("connection_panel").style.display = "none";
                 return;
@@ -313,14 +314,58 @@ function drawConnection(url) {
     xhttp.send();
 }
 
-//sidebar的对应属性设置为active
-function activeSidebar() {
-    document.getElementById("project_commit_li").className = "active";
-}
+function drawValidCommit(url) {
+    var xhttp;
+    if (window.XMLHttpRequest) {
+        xhttp = new XMLHttpRequest();
+    } else {
+        xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xhttp.onreadystatechange = function () {
+        var object, members = [], total_add = [], valid_add = [], ctx;
+        var i = 0;
+        if (this.readyState = 4 && this.status == 200) {
+            object = this.response;
+            if (object.toString() === "[]" || object.toString() === "") {
+                document.getElementById("valid_commit").style.display = "none";
+                return;
+            }
+            object = JSON.parse(object);
+            document.getElementById("valid_commit").style.display = "block";
+            for (; i < object.length; i++) {
+                members[i] = object[i].member;
+                total_add[i] = object[i].total_add;
+                valid_add[i] = object[i].valid_add;
+            }
+            if (student_valid_commit_chart != null) {
+                student_valid_commit_chart.destroy();
+            }
+            ctx = document.getElementById("valid_commit_chart");
 
-//tab的对应属性设置为active
-function activeTab() {
-    document.getElementById("iterationAll").className = "my-li active";
+            student_valid_commit_chart = new Chart(ctx, {
+                type : 'bar',
+                data : {
+                    labels : members,
+                    datasets : [
+                        {
+                            label : "总代码",
+                            backgroundColor : colors[0],
+                            data : total_add,
+                            borderWidth : 1
+                        },
+                        {
+                            label : "有效代码",
+                            backgroundColor : colors[1],
+                            data : valid_add,
+                            borderWidth : 1
+                        }
+                    ]
+                }
+            });
+        }
+    };
+    xhttp.open("GET", url, true);
+    xhttp.send();
 }
 
 //tab 转换
@@ -328,37 +373,52 @@ function tabSwitch(id) {
     var
         length = document.getElementsByClassName("my-li").length,
         project_id = document.getElementById("project_id").value,
-        project_url, student_url,conection_url = "";
+        project_url, student_url,conection_url = "",valid_commit = "";
+    if (project_id == "")
+        return;
+    var callback = function (result) {
+        if (result === 0) {
+            alert("此项目不存在");
+        } else {
+            activeTab(id);
+        }
+    };
     for (var i = 0; i < length; i++) {
         document.getElementsByClassName("my-li")[i].className = "my-li";
     }
-    document.getElementById(id).className += " active";
     switch (id) {
         case "iterationAll" :
             project_url = "/data/project/" + project_id;
             student_url = "/data/project/" + project_id + "/studentCommit";
+            valid_commit = "/data/project/" + project_id + "/studentValidCommit"
             conection_url = "/data/project/" + project_id + "/studentConnection";
             break;
         case "iteration1" :
             project_url = "/data/project/" + project_id + "/iteration/1";
             student_url = "/data/project/" + project_id + "/studentCommit/iteration/1";
             document.getElementById("connection_panel").style.display = "none";
+            document.getElementById("valid_commit").style.display = "none";
             break;
         case "iteration2" :
             project_url = "/data/project/" + project_id + "/iteration/2";
             student_url = "/data/project/" + project_id + "/studentCommit/iteration/2";
             document.getElementById("connection_panel").style.display = "none";
+            document.getElementById("valid_commit").style.display = "none";
             break;
         case "iteration3" :
             project_url = "/data/project/" + project_id + "/iteration/3";
             student_url = "/data/project/" + project_id + "/studentCommit/iteration/3";
             document.getElementById("connection_panel").style.display = "none";
+            document.getElementById("valid_commit").style.display = "none";
             break;
     }
-    drawProject(project_url);
+    drawProject(project_url, callback);
     drawStudentCommit(student_url);
     if (conection_url != "") {
         drawConnection(conection_url);
+    }
+    if (valid_commit != ""){
+        drawValidCommit(valid_commit);
     }
 }
 
@@ -368,7 +428,7 @@ function search() {
         if (result === 0) {
             alert("此项目不存在");
         } else {
-            activeTab();
+            activeTab("iterationAll");
         }
     };
     //make every tab inactive
@@ -376,14 +436,29 @@ function search() {
         document.getElementsByClassName("my-li")[i].className = "my-li";
     }
     drawProject("/data/project/" + id, callback);
+    drawValidCommit("/data/project/" + id + "/studentValidCommit");
     drawStudentCommit("/data/project/" + id + "/studentCommit");
     drawConnection("/data/project/" + id + "/studentConnection");
 }
 
+function activeTab(id) {
+    var length = document.getElementsByClassName("my-li").length;
+    for (var i = 0; i < length; i++) {
+        document.getElementsByClassName("my-li")[i].className = "my-li";
+    }
+    document.getElementById(id).className = "my-li active";
+}
+
+//sidebar的对应属性设置为active
+function activeSidebar() {
+    document.getElementById("project_commit_li").className = "active";
+}
+
+//key enter function
 document.getElementById("project_id").addEventListener("keyup", function () {
     event.preventDefault();
     if (event.keyCode == 13)
         document.getElementById("search_button").click();
 });
-
+//active sidebar
 activeSidebar();

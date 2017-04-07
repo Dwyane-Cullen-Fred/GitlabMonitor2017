@@ -97,9 +97,9 @@ function draw() {
 }
 
 //设置menu对应的选项为active
-function avtiveMenu() {
+function activeSidebar() {
     document.getElementById("all_commit_li").className = "active";
 }
 
 draw();
-avtiveMenu();
+activeSidebar();

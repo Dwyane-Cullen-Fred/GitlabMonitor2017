@@ -54,7 +54,15 @@
                         </div>
                     </div>
                     <div class="blank_div"></div>
+                    <div id="valid_commit">
+                        <h2>有效提交率</h2>
+                        <div>
+                            <canvas id="valid_commit_chart" width="100%" height="40 px"></canvas>
+                        </div>
+                    </div>
+                    <div class="blank_div"></div>
                     <%--student_panel--%>
+
                     <div id="student_panel" class="row student_panel">
                         <div>
                             <h2>学生提交情况</h2>
@@ -87,6 +95,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="blank_div"></div>
                     <%--connection_panel--%>
                     <div id="connection_panel" class="row" >
