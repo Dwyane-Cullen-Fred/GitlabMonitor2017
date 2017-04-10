@@ -7,5 +7,6 @@
         <mapper resource="org/mapper/school.xml" />
         <mapper resource="org/mapper/projectCommit.xml" />
         <mapper resource="org/mapper/studentCommit.xml" />
+        <mapper resource="org/mapper/projectInfo.xml" />
     </mappers>
 </configuration>

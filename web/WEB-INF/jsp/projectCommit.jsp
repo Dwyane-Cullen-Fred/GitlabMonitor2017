@@ -30,7 +30,7 @@
                 </div>
                 <div class="blank_div"></div>
                 <div class="row container_panel">
-                    <ul class="nav nav-tabs">
+                    <ul id = "iteration_nav" class="nav nav-tabs">
                         <li id="iterationAll" role="presentation" class="my-li" onclick="tabSwitch(this.id)">
                             <a href="#">总迭代</a>
                         </li>
@@ -110,6 +110,7 @@
 
         </div>
     </div>
+
 
     <script src="/static/js/chart.js/dist/Chart.js" ></script>
     <script src="/static/js/project/projectCommit.js"></script>

@@ -6,7 +6,7 @@
     display: none;
 }
 
-#connection_panel, #valid_commit{
+#connection_panel, #valid_commit, #iteration_nav{
     display: none;
 }
 .show_bottom_border {

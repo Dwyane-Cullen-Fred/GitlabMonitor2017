@@ -1,4 +1,4 @@
-var colors = ["#ff0000", "#ffff00", "#0000ff", "#00ffff", "#808080"];
+var colors = ["#ff0000", "#ffff00", "#0000ff", "#00ffff", "#00ff00"];
 /**
  * 4个节点时的x，y坐标
  */
@@ -160,7 +160,7 @@ function drawStudentCommit(url) {
                 datasets : [
                     {
                         data : total_commit,
-                        backgroundColor : colors.slice(0, 4)
+                        backgroundColor : colors.slice(0, students.length)
                     }
 
                 ]
@@ -176,7 +176,7 @@ function drawStudentCommit(url) {
                 datasets : [
                     {
                         data : total_add,
-                        backgroundColor : colors.slice(0, 4)
+                        backgroundColor : colors.slice(0, students.length)
                     }
 
                 ]
@@ -192,7 +192,7 @@ function drawStudentCommit(url) {
                 datasets : [
                     {
                         data : total_delete,
-                        backgroundColor : colors.slice(0, 4)
+                        backgroundColor : colors.slice(0, students.length)
                     }
 
                 ]
@@ -378,8 +378,10 @@ function tabSwitch(id) {
         return;
     var callback = function (result) {
         if (result === 0) {
+            document.getElementById("iteration_nav").style.display = "none";
             alert("此项目不存在");
         } else {
+            document.getElementById("iteration_nav").style.display = "block";
             activeTab(id);
         }
     };
@@ -390,7 +392,7 @@ function tabSwitch(id) {
         case "iterationAll" :
             project_url = "/data/project/" + project_id;
             student_url = "/data/project/" + project_id + "/studentCommit";
-            valid_commit = "/data/project/" + project_id + "/studentValidCommit"
+            valid_commit = "/data/project/" + project_id + "/studentValidCommit";
             conection_url = "/data/project/" + project_id + "/studentConnection";
             break;
         case "iteration1" :
@@ -428,10 +430,12 @@ function search() {
         if (result === 0) {
             alert("此项目不存在");
         } else {
+            document.getElementById("iteration_nav").style.display = "block";
             activeTab("iterationAll");
         }
     };
     //make every tab inactive
+    var length = document.getElementsByClassName("my-li").length;
     for (var i = 0; i < length; i++) {
         document.getElementsByClassName("my-li")[i].className = "my-li";
     }
@@ -462,3 +466,29 @@ document.getElementById("project_id").addEventListener("keyup", function () {
 });
 //active sidebar
 activeSidebar();
+
+// var completeId = function(callback) {
+//     var xhttp;
+//     if (window.XMLHttpRequest) {
+//         xhttp = new XMLHttpRequest();
+//     } else {
+//         xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+//     }
+//     xhttp.onreadystatechange = function () {
+//         var data;
+//         if (this.readyState == 4 && this.status == 200) {
+//             data = JSON.parse(this.response);
+//             callback(data);
+//         }
+//         xhttp.open("GET", "/data/project/allId", true);
+//         xhttp.send();
+//     };
+// };
+// var id_data;
+// var callback = function (data) {
+//     id_data = data;
+// }
+// completeId(callback);
+// document.getElementById("project_id").autocomplete({
+//     source : id_data
+// });

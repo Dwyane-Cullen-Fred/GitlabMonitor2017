@@ -3,6 +3,7 @@ package org.controller;
 import com.google.gson.Gson;
 import org.bean.DayCommit;
 import org.service.ProjectCommitService;
+import org.service.ProjectInfoService;
 import org.service.StudentCommitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class DataAPIController {
 
     @Autowired
     private StudentCommitService studentCommitService;
+
+    @Autowired
+    private ProjectInfoService projectInfoService;
 
     /**
      * @return ： 每天所有项目提交信息的json格式
@@ -89,5 +93,15 @@ public class DataAPIController {
     @RequestMapping(method = RequestMethod.GET, value = "/data/project/{id}/studentValidCommit")
     public @ResponseBody String getStudentValidCommit(@PathVariable int id) {
         return new Gson().toJson(studentCommitService.getStudentValidCommit(id));
+    }
+
+
+    /**
+     *
+     * @return : 返回所有的项目的id
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/data/project/allId")
+    public @ResponseBody String getProjectAllId() {
+        return new Gson().toJson(projectInfoService.getProjectAllId());
     }
 }
