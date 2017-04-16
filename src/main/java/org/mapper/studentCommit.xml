@@ -41,11 +41,6 @@
         <result property="valid_file" column="valid_file" />
     </resultMap>
 
-    <resultMap id="studentContribution" type="org.bean.Contribution">
-        <result property="student" column = "student" />
-        <result property="weight"  column="weight" />
-    </resultMap>
-
     <select id="selectStudentCommitById" resultMap="studentCommit" >
         SELECT * from studentCommitv1 WHERE id = #{id};
     </select>
@@ -144,21 +139,6 @@
             WHERE t1.author_name = t2.author_name
         ]]>
 
-    </select>
-
-    <select id="selectStudentContributionByXML" resultMap="studentContribution">
-        SELECT author_name as student, sum(add_line) as weight from filev1, commitv1
-        WHERE filev1.sha = commitv1.id AND commitv1.projectid = #{id}
-        and (filev1.filename LIKE "%pom.xml" or filev1.filename like "%properties")
-        GROUP BY author_name
-        ORDER BY weight
-    </select>
-
-    <select id="selectStudentCOntributionByCode" resultMap="studentContribution">
-        SELECT author_name as student, sum(add_line) as weight from filev1, commitv1
-        WHERE filev1.sha = commitv1.id AND commitv1.projectid = #{id}
-        GROUP BY author_name
-        ORDER BY weight
     </select>
 
 

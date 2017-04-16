@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fileCommit">
+
+    <resultMap id="contribution" type="org.bean.Contribution">
+        <result property="student" column="author" />
+        <result property="weight" column="fileline" />
+    </resultMap>
+
+    <!--前端代码统计-->
+    <select id="selectContributionByFontCode" resultMap="contribution">
+
+    </select>
+
+    <!--后台代码统计-->
+
+    <!--纯java代码统计-->
+</mapper>

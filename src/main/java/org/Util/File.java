@@ -13,5 +13,7 @@ public enum File {
     HTML,                   //html文件
     JSP,                    //jsp文件
     XML,                    //xml文件
-    PROPERTY                //项目属性文件
+    PROPERTY,               //项目属性文件
+    py,                     //python文件
+    php,                    //php文件
 }

@@ -39,22 +39,12 @@
         </property>
     </bean>
 
+    <!--远程数据库配置-->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" >
-        <property name="driverClassName">
-            <value>${jdbc.driverClassName}</value>
-        </property>
-
-        <property name="url">
-            <value>${jdbc.url}</value>
-        </property>
-
-        <property name="username">
-            <value>${jdbc.username}</value>
-        </property>
-
-        <property name="password">
-            <value>${jdbc.password}</value>
-        </property>
+        <property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+        <property name="url"><value>${jdbc.url}</value></property>
+        <property name="username"><value>${jdbc.username}</value></property>
+        <property name="password"><value>${jdbc.password}</value></property>
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
@@ -66,8 +56,29 @@
         <constructor-arg index="0" ref="sqlSessionFactory" />
     </bean>
 
-    <bean id="BaseDao" class="org.dao.BaseDaoImpl" >
+    <bean id="baseDao" class="org.dao.BaseDaoImpl" >
         <property name="sqlSession" ref="sqlSession" />
+    </bean>
+
+    <!--本地数据库配置-->
+    <bean id="local_datasource" class="org.apache.commons.dbcp2.BasicDataSource" >
+        <property name="driverClassName"><value>${local.jdbc.driverClassName}</value></property>
+        <property name="url"><value>${local.jdbc.url}</value></property>
+        <property name="username"><value>${local.jdbc.username}</value></property>
+        <property name="password"><value>${local.jdbc.password}</value></property>
+    </bean>
+
+    <bean id="localSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="local_datasource" />
+        <property name="configLocation" value="classpath:local-mybatis-configuration.xml"/>
+    </bean>
+
+    <bean id="localSqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="localSqlSessionFactory"/>
+    </bean>
+
+    <bean id="localBaseDao" class="org.localDao.LocalBaseDaoImpl">
+        <property name="sqlSession" ref="localSqlSession" />
     </bean>
 
 </beans>

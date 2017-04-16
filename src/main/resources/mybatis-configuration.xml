@@ -8,6 +8,5 @@
         <mapper resource="org/mapper/projectCommit.xml" />
         <mapper resource="org/mapper/studentCommit.xml" />
         <mapper resource="org/mapper/projectInfo.xml" />
-        <mapper resource="org/mapper/fileSelect.xml" />
     </mappers>
 </configuration>
