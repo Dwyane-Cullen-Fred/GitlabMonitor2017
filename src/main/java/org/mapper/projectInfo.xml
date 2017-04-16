@@ -4,17 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="projectInfo">
 
-    <resultMap id="projectInfo" type="org.crawler.ProjectInfo">
-        <result property="id" column="id" />
-        <result property="name" column="name" />
-        <result property="path" column="path" />
-    </resultMap>
-
     <select id="selectProjectAllId" resultType="INTEGER">
         SELECT DISTINCT id from groupprojectv1;
     </select>
 
-    <select id="selectProjectAllInfo" resultMap="projectInfo">
-        SELECT id, name, path FROM groupprojectv1;
-    </select>
 </mapper>
