@@ -1,0 +1,42 @@
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th
+{
+    text-align: center;
+}
+
+#container_panel {
+    display: none;
+}
+
+#container_panel h2 {
+    display: inline;
+}
+
+.head-info-container {
+    clear: both;
+}
+
+.btn-container {
+    float: right;
+}
+
+.commit-container {
+    overflow: hidden;
+}
+
+.selected_div {
+    float: right;
+}
+
+.my-drop-down {
+    overflow: hidden;
+}
+
+.my-selected-btn {
+    float: right;
+    margin-right: 20px;
+}

@@ -12,14 +12,11 @@
 
     <mvc:annotation-driven />
 
-    <!--<context:component-scan base-package="org.controller" />-->
-    <!--<context:component-scan base-package="org.service" />-->
-    <!--<context:component-scan base-package="org.dao" />-->
-
-    <context:component-scan base-package="validCoding.controller" />
-    <context:component-scan base-package="validCoding.service" />
-    <context:component-scan base-package="validCoding.dao" />
-
+    <context:component-scan base-package="org.controller" />
+    <context:component-scan base-package="org.service" />
+    <context:component-scan base-package="org.localDao" />
+    <context:component-scan base-package="org.localService" />
+    <context:component-scan base-package="org.dao" />
 
     <context:property-placeholder location="classpath:config.properties" />
 
@@ -44,36 +41,74 @@
         </property>
     </bean>
 
-    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" >
-        <property name="driverClassName">
-            <value>${jdbc.driverClassName}</value>
+    <!--muti-db-->
+    <bean id="vendorProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="SQL Server">sqlserver</prop>
+                <prop key="DB2">db2</prop>
+                <prop key="Oracle">oracle</prop>
+                <prop key="MySQL">mysql</prop>
+            </props>
         </property>
+    </bean>
 
+    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+        <property name="properties" ref="vendorProperties"/>
+    </bean>
+
+    <!--远程数据库配置-->
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" >-->
+        <!--<property name="driverClassName"><value>${jdbc.driverClassName}</value></property>-->
+        <!--<property name="url"><value>${jdbc.url}</value></property>-->
+        <!--<property name="username"><value>${jdbc.username}</value></property>-->
+        <!--<property name="password"><value>${jdbc.password}</value></property>-->
+    <!--</bean>-->
+
+    <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >-->
+        <!--<property name="dataSource" ref="dataSource" />-->
+        <!--<property name="configLocation" value="classpath:mybatis-configuration.xml" />-->
+        <!--<property name="databaseIdProvider" ref="databaseIdProvider"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">-->
+        <!--<constructor-arg index="0" ref="sqlSessionFactory" />-->
+    <!--</bean>-->
+
+    <!--<bean id="baseDao" class="org.dao.BaseDaoImpl" >-->
+        <!--<property name="sqlSession" ref="sqlSession" />-->
+    <!--</bean>-->
+
+    <!--<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--本地数据库配置-->
+    <bean id="local_datasource" class="org.apache.commons.dbcp2.BasicDataSource" >
+        <property name="driverClassName"><value>${local.jdbc.driverClassName}</value></property>
         <property name="url">
-            <value>${jdbc.url}</value>
+            <value>${local.jdbc.url}</value>
         </property>
-
-        <property name="username">
-            <value>${jdbc.username}</value>
-        </property>
-
-        <property name="password">
-            <value>${jdbc.password}</value>
-        </property>
+        <property name="username"><value>${local.jdbc.username}</value></property>
+        <property name="password"><value>${local.jdbc.password}</value></property>
     </bean>
 
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
-        <property name="dataSource" ref="dataSource" />
-        <property name="configLocation" value="classpath:mybatis-configuration.xml" />
+    <bean id="localSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="local_datasource" />
+        <property name="configLocation" value="classpath:local-mybatis-configuration.xml"/>
+        <property name="databaseIdProvider" ref="databaseIdProvider"/>
     </bean>
 
-    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg index="0" ref="sqlSessionFactory" />
+    <bean id="localSqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="localSqlSessionFactory"/>
     </bean>
 
-    <!-- 这里被修改了 -->
-    <bean id="BaseDao" class="validCoding.dao.BaseDaoImpl" >
-        <property name="sqlSession" ref="sqlSession" />
+    <bean id="localBaseDao" class="org.localDao.LocalBaseDaoImpl">
+        <property name="sqlSession" ref="localSqlSession" />
+    </bean>
+
+    <bean id="localTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="local_datasource"/>
     </bean>
 
 </beans>

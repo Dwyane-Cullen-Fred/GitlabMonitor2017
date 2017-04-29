@@ -112,6 +112,7 @@
     </div>
 
 
+    <jsp:include page="footer.jsp"/>
     <script src="/static/js/chart.js/dist/Chart.js" ></script>
     <script src="/static/js/project/projectCommit.js"></script>
 </body>

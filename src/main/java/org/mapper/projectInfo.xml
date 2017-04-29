@@ -7,4 +7,5 @@
     <select id="selectProjectAllId" resultType="INTEGER">
         SELECT DISTINCT id from groupprojectv1;
     </select>
+
 </mapper>

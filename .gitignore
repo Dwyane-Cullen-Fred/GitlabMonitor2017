@@ -7,7 +7,9 @@
 *.iml
 out
 gen
-/target/
+target/
+/**/web/static/css/bootstrap/
+/**/web/static/js/chart.js/
 
 # Eclipse project files
 .classpath
