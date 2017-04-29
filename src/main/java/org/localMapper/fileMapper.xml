@@ -6,15 +6,168 @@
 
     <resultMap id="contribution" type="org.bean.Contribution">
         <result property="student" column="author" />
-        <result property="weight" column="fileline" />
+        <result property="weight" column="weight" />
     </resultMap>
 
-    <!--前端代码统计-->
-    <select id="selectContributionByFontCode" resultMap="contribution">
+    <resultMap id="projectFile" type="org.bean.ProjectFile">
+        <result property="id" column="id" />
+        <result property="webUrl" column="web_url" />
+        <result property="sha" column="sha" />
+        <result property="filename" column="filename" />
+    </resultMap>
 
+    <!--统计每个成员提交的代码量-->
+    <select id="selectContributionByCommit" resultMap="contribution">
+        <![CDATA[
+            SELECT t.`commit` as author,
+                   SUM(t.add_line - t.delete_line) as weight
+                   FROM
+                    (SELECT file.filename, file.add_line,
+                    file.delete_line,
+                    file_author.author as author,
+                    file.author as `commit`
+                    from file_author, file, `commit`
+                    WHERE file_author.project_id = file.project_id
+                                AND file_author.project_id = `commit`.project_id
+                    AND file.sha = `commit`.sha
+                    AND file_author.filename = file.filename
+                    AND file.datetime > #{start}
+                    AND file.datetime < #{end}
+                    AND file_author.project_id = #{projectId}
+                    AND `commit`.total_add < 5000
+                    AND file_author.filename NOT LIKE "%eclipse%"
+                    AND file_author.filename NOT LIKE "%idea%"
+                    AND file_author.filename NOT LIKE "%txt"
+                    AND file_author.filename NOT LIKE "%class") t
+                GROUP BY t.`commit`
+        ]]>
     </select>
 
-    <!--后台代码统计-->
+    <!--根据文件类型统计代码量-->
+    <select id="selectContributionByFile" resultMap="contribution">
+        <![CDATA[
+            SELECT t.`author` as author,
+                   SUM(t.add_line - t.delete_line) as weight
+                   FROM
+                    (SELECT file.filename, file.add_line,
+                    file.delete_line,
+                    file_author.author as author,
+                    file.author as `commit`
+                    from file_author, file, `commit`
+                    WHERE file_author.project_id = file.project_id
+                                AND file_author.project_id = `commit`.project_id
+                    AND file.sha = `commit`.sha
+                    AND file_author.filename = file.filename
+                    AND file.datetime > #{start}
+                    AND file.datetime < #{end}
+                    AND file_author.project_id = #{projectId}
+                    AND `commit`.total_add < 5000
+                    AND file_author.filename NOT LIKE "%eclipse%"
+                    AND file_author.filename NOT LIKE "%idea%"
+                    AND file_author.filename NOT LIKE "%txt"
+                    AND file_author.filename NOT LIKE "%class") t
+                WHERE t.filename like #{fileFeather}
+                GROUP BY t.`author`
+        ]]>
+    </select>
 
-    <!--纯java代码统计-->
+    <!--计算别的组员对自己代码的贡献-->
+    <select id="selectContributionFromOthers" resultMap="contribution">
+        <![CDATA[
+            SELECT t.`author` as author,
+                   SUM(t.add_line - t.delete_line) as weight
+                   FROM
+                    (SELECT file.filename, file.add_line,
+                    file.delete_line,
+                    file_author.author as author,
+                    file.author as `commit`
+                    from file_author, file, `commit`
+                    WHERE file_author.project_id = file.project_id
+                                AND file_author.project_id = `commit`.project_id
+                    AND file.sha = `commit`.sha
+                    AND file_author.filename = file.filename
+                    AND file.datetime > #{start}
+                    AND file.datetime < #{end}
+                    AND file_author.project_id = #{projectId}
+                    AND `commit`.total_add < 5000
+                    AND file_author.filename NOT LIKE "%eclipse%"
+                    AND file_author.filename NOT LIKE "%idea%"
+                    AND file_author.filename NOT LIKE "%txt"
+                    AND file_author.filename NOT LIKE "%class") t
+                WHERE t.author != t.`commit`
+                GROUP BY t.`author`
+        ]]>
+    </select>
+
+    <!--计算对别人代码的贡献-->
+    <select id="selectContributionToOthers" resultMap="contribution">
+        <![CDATA[
+            SELECT t.`commit` as author,
+                   SUM(t.add_line - t.delete_line) as weight
+                   FROM
+                    (SELECT file.filename, file.add_line,
+                    file.delete_line,
+                    file_author.author as author,
+                    file.author as `commit`
+                    from file_author, file, `commit`
+                    WHERE file_author.project_id = file.project_id
+                                AND file_author.project_id = `commit`.project_id
+                    AND file.sha = `commit`.sha
+                    AND file_author.filename = file.filename
+                    AND file.datetime > #{start}
+                    AND file.datetime < #{end}
+                    AND file_author.project_id = #{projectId}
+                    AND `commit`.total_add < 5000
+                    AND file_author.filename NOT LIKE "%eclipse%"
+                    AND file_author.filename NOT LIKE "%idea%"
+                    AND file_author.filename NOT LIKE "%txt"
+                    AND file_author.filename NOT LIKE "%class") t
+                WHERE t.author != t.`commit`
+                GROUP BY t.`commit`
+        ]]>
+    </select>
+
+    <!--根据注释行数和空格行数来查找无用代码文件-->
+    <select id="selectInvalidCommitByCommentAndBlank" resultMap="projectFile">
+          <![CDATA[
+              SELECT groupproject.id,
+                     groupproject.web_url,
+                     ${tableName}.sha,
+                     ${tableName}.filename
+              from ${tableName}, groupproject
+              WHERE ${tableName}.project_id = groupproject.id
+              AND ${tableName}.project_id = #{projectId}
+              AND filename like "%src%java"
+              AND fileline / 2 < comment_line + blank_line
+          ]]>
+    </select>
+
+    <!--查询修改次数过少的文件-->
+    <select id="selectInvalidFileByFewModifyTimes" resultMap="projectFile">
+        <![CDATA[
+            SELECT groupproject.id, groupproject.web_url, file.sha, file.filename from file, groupproject
+            WHERE file.project_id = groupproject.id
+            AND file.project_id = #{projectId}
+            AND file.datetime > #{start}
+            AND file.datetime < #{end}
+            AND filename LIKE "%src%java"
+            GROUP BY file.filename
+            HAVING COUNT(file.filename) = 1
+            ORDER BY SUM(add_line - delete_line) DESC
+        ]]>
+    </select>
+
+    <!--查询修改次数过多的文件-->
+    <select id="selectInvalidFileByLargeModifyTimes" resultMap="projectFile">
+        <![CDATA[
+            SELECT groupproject.id, groupproject.web_url, file.sha, file.filename FROM file, groupproject
+            WHERE file.project_id = groupproject.id
+            AND file.project_id = #{projectId}
+            AND file.datetime > #{start}
+            AND file.datetime < #{end}
+            AND file.filename LIKE "%src%java"
+            GROUP BY file.filename
+            HAVING COUNT(file.filename) > 10
+        ]]>
+    </select>
 </mapper>

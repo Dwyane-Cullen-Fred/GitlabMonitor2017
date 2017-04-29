@@ -22,4 +22,9 @@ public class Contribution {
     public void setWeight(int weight) {
         this.weight = weight;
     }
+
+    @Override
+    public String toString() {
+        return student + " " + weight;
+    }
 }

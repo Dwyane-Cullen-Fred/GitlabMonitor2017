@@ -4,6 +4,8 @@
 
 <configuration>
     <mappers>
-
+        <mapper resource="org/localMapper/fileMapper.xml" />
+        <mapper resource="org/localMapper/projectMapper.xml" />
+        <mapper resource="org/localMapper/CodeAggregation.xml" />
     </mappers>
 </configuration>
