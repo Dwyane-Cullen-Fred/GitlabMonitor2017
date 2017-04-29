@@ -8,5 +8,8 @@
         <mapper resource="org/mapper/projectCommit.xml" />
         <mapper resource="org/mapper/studentCommit.xml" />
         <mapper resource="org/mapper/projectInfo.xml" />
+
+        <mapper resource="validCoding/mapper/CodeAggregation.xml" />
+        <mapper resource="validCoding/mapper/Info.xml" />
     </mappers>
 </configuration>

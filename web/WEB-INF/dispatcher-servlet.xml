@@ -12,9 +12,14 @@
 
     <mvc:annotation-driven />
 
-    <context:component-scan base-package="org.controller" />
-    <context:component-scan base-package="org.service" />
-    <context:component-scan base-package="org.dao" />
+    <!--<context:component-scan base-package="org.controller" />-->
+    <!--<context:component-scan base-package="org.service" />-->
+    <!--<context:component-scan base-package="org.dao" />-->
+
+    <context:component-scan base-package="validCoding.controller" />
+    <context:component-scan base-package="validCoding.service" />
+    <context:component-scan base-package="validCoding.dao" />
+
 
     <context:property-placeholder location="classpath:config.properties" />
 
@@ -66,7 +71,8 @@
         <constructor-arg index="0" ref="sqlSessionFactory" />
     </bean>
 
-    <bean id="BaseDao" class="org.dao.BaseDaoImpl" >
+    <!-- 这里被修改了 -->
+    <bean id="BaseDao" class="validCoding.dao.BaseDaoImpl" >
         <property name="sqlSession" ref="sqlSession" />
     </bean>
 

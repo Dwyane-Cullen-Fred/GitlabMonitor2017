@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProjectInfo">
+
+    <!--查找项目信息-->
+    <resultMap id="ProjectBasicInfo" type="validCoding.bean.ProjectInfo" >
+        <result property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="project_url" column="web_url" />
+        <result property="groupid" column="groupid" />
+    </resultMap>
+    <select id="selectProjectBasicInfoByID" resultMap="ProjectBasicInfo">
+        select id, `name`, web_url, groupid
+        from groupproject
+        where id = #{id}
+    </select>
+
+    <!--查找学生信息-->
+    <resultMap id="StudentInfo" type="validCoding.bean.StudentInfo" >
+        <result property="author" column="author" />
+        <result property="project_id" column="project_id" />
+        <result property="project_name" column="project_name" />
+        <result property="project_url" column="project_url" />
+        <result property="groupid" column="groupid" />
+    </resultMap>
+    <select id="selectStudentInfoByAuthor" resultMap="StudentInfo">
+        select
+        distinct file.author as author,
+        groupproject.id as project_id,
+        groupproject.`name` as project_name,
+        groupproject.web_url as project_url,
+        groupproject.groupid
+        from groupproject, file
+        where file.author = #{author}
+        and groupproject.id = file.project_id
+    </select>
+
+
+</mapper>

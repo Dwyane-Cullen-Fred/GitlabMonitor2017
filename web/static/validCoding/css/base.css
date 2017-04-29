@@ -1,0 +1,44 @@
+body, html {
+    height: 100%;
+}
+
+body {
+    position: relative;
+}
+
+#top-bar {
+    height: 100px;
+    width:  100%;
+
+    background-color: #6f5499;
+    text-align: center;
+    padding-top: 30px;
+}
+
+#top-bar h1 {
+    display: inline;
+    color: white;
+}
+
+#body-bar {
+    overflow: hidden;
+    display: flex;
+}
+
+#body-bar #left-bar {
+    align-items: stretch;
+    background-color: #8c8c8c;
+    min-height: 100%;
+    font-size: 25px;
+    padding-left: 50px;
+
+    padding-top: 30px;
+}
+
+.blank_div {
+    height: 20px;
+}
+
+.my-col-lg-2{
+    padding-right: 0;
+}
