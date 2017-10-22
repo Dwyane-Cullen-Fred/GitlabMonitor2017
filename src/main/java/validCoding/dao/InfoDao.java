@@ -16,7 +16,7 @@ public class InfoDao extends BaseDaoImpl {
      * @return ： 项目基本信息，包括id，名字，url，组号
      */
     public List<ProjectInfo> selectProjectBasicInfoByID(int id) {
-        List<ProjectInfo> result = sqlSession.selectList("ProjectInfo.selectProjectBasicInfoByID", id);
+        List<ProjectInfo> result = sqlSession.selectList("Info.selectProjectBasicInfoByID", id);
         return  result;
     }
 
@@ -27,7 +27,7 @@ public class InfoDao extends BaseDaoImpl {
      */
     public List<StudentInfo> selectStudentInfoByAuthor(String author) {
 
-        List<StudentInfo> result = sqlSession.selectList("ProjectInfo.selectStudentInfoByAuthor", author);
+        List<StudentInfo> result = sqlSession.selectList("Info.selectStudentInfoByAuthor", author);
         return  result;
     }
 

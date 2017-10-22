@@ -6,7 +6,7 @@ package validCoding.bean;
  */
 public class StudentInfo {
 
-    private String author;                   //姓名
+    private String author;                   //学生用户名
     private int project_id;                   //项目ID
     private String project_name;              //项目名
     private String project_url;           //项目url

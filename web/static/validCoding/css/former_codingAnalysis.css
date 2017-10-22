@@ -1,0 +1,58 @@
+.my-col-lg-2{
+    padding-right: 0;
+}
+
+.project_valid_panel, .project_composition_panel, .project_info_panel,
+.student_info_panel, .student_valid_panel, .student_composition_panel
+{
+    display: none;
+}
+
+#connection_panel, #valid_commit, #iteration_nav{
+    display: none;
+}
+.show_bottom_border {
+    border-bottom: 2px solid lightgrey;
+}
+
+canvas.pie_container {
+    height: 30px;
+}
+
+svg.connection_svg {
+    margin-left: 10%;
+    width: 400px;
+    height: 300px;
+}
+
+.node {
+    fill: red;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: blue;
+}
+
+.circle_text{
+    text-anchor: middle;
+    stroke: black;
+    stroke-width :"2px";
+}
+
+.name_title {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    color: rgb(3,102,214);
+}
+
+.common_tittle {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    color: rgb(176,114,25);
+}
+
+#left-bar li {
+    font-size: 18px;
+}

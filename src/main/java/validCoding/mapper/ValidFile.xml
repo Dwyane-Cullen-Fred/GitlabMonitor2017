@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ValidFile">
+
+
+    <resultMap id="ValidFile" type="validCoding.bean.ValidFile" >
+        <result property="project_url" column="project_url" />
+        <result property="sha" column="sha" />
+        <result property="file_name" column="file_name" />
+    </resultMap>
+
+    <select id="selectProjectValidFileByAuthorAndIterationAndType" resultMap="ValidFile">
+        select
+        groupproject.web_url as project_url,
+        ${table_name}.sha as sha,
+        ${table_name}.filename as file_name
+        from ${table_name}, groupproject
+        where
+        ${table_name}.project_id = #{project_id}
+        and `type` = #{type}
+        and ${table_name}.project_id = groupproject.id
+        group by ${table_name}.filename
+        having sum(fileline) &gt; 0
+        order by sum(fileline) desc
+        limit 0, 20;
+    </select>
+    <!--查找某学生某迭代，写的某种有码版本（排序标准：该学生迭代器件对同一个文件总计贡献了多少代码；取值量：取前15）-->
+    <select id="selectStudentValidFileByAuthorAndIterationAndType" resultMap="ValidFile">
+        select
+        groupproject.web_url as project_url,
+        valid_file.sha as sha,
+        valid_file.filename as file_name
+        from valid_file, groupproject
+        where
+        valid_file.author = #{author}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM gitlab.deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM gitlab.deadline WHERE deadline.name = #{iteration} )
+        and `type` = #{type}
+        and valid_file.project_id = groupproject.id
+        group by valid_file.filename
+        having sum(add_line)-sum(delete_line) &gt; 0
+        order by sum(add_line)-sum(delete_line) desc
+        limit 0, 15;
+    </select>
+
+
+
+</mapper>

@@ -1,44 +1,44 @@
-.my-col-lg-2{
-    padding-right: 0;
-}
-
-.project_valid_panel, .project_composition_panel, .project_info_panel,
-.student_info_panel, .student_valid_panel, .student_composition_panel
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th
 {
+    text-align: center;
+}
+
+#container_panel {
     display: none;
 }
 
-#connection_panel, #valid_commit, #iteration_nav{
-    display: none;
-}
-.show_bottom_border {
-    border-bottom: 2px solid lightgrey;
+#container_panel h2 {
+    display: inline;
 }
 
-canvas.pie_container {
-    height: 30px;
+.head-info-container {
+    clear: both;
 }
 
-svg.connection_svg {
-    margin-left: 10%;
-    width: 400px;
-    height: 300px;
+.btn-container {
+    float: right;
 }
 
-.node {
-    fill: red;
-    stroke: #fff;
-    stroke-width: 2px;
+.validFile-container {
+    /*overflow: hidden;*/
 }
 
-.link {
-    stroke: blue;
+.selected_div {
+    float: right;
 }
 
-.circle_text{
-    text-anchor: middle;
-    stroke: black;
-    stroke-width :"2px";
+.my-drop-down {
+    overflow: hidden;
+}
+
+.my-selected-btn {
+    float: right;
+    margin-right: 20px;
 }
 
 .name_title {
@@ -55,4 +55,8 @@ svg.connection_svg {
 
 #left-bar li {
     font-size: 18px;
+}
+
+#main_panel{
+    display: none;
 }

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ValidCodeAggregation">
+
+
+    <!--validCoding.bean.ProjectCode-->
+    <resultMap id="ProjectCode" type="validCoding.bean.ProjectCode" >
+        <result property="project_id" column="project_id" />
+        <result property="type" column="type" />
+        <result property="comment_line" column="comment_line_total" />
+        <result property="blank_line" column="blank_line_total" />
+        <result property="line_total" column="line_total" />
+        <result property="useful_line" column="useful_line_total" />
+    </resultMap>
+    <!--查找某迭代的某个项目，不同作用文件的行数、注释、空行数-->
+    <select id="selectProjectValidByIDAndIteration" resultMap="ProjectCode">
+        select
+        project_id ,
+        `valid_type` as `type` ,
+        sum(comment_line) as comment_line_total,
+        sum(blank_line) as blank_line_total,
+        sum(fileline) as line_total,
+        sum(fileline)-sum(comment_line)-sum(blank_line) as useful_line_total
+        from ${table_name}
+        where project_id = #{project_id}
+        group BY `valid_type`
+        having sum(fileline)-sum(comment_line)-sum(blank_line) &gt; 0 ;
+    </select>
+    <!--查找某迭代的某个项目，不同类型文件的行数、注释、空行数-->
+    <select id="selectProjectCompositionByIDAndIteration" resultMap="ProjectCode">
+        select
+        project_id ,
+        `type` ,
+        sum(comment_line) as comment_line_total,
+        sum(blank_line) as blank_line_total,
+        sum(fileline) as line_total,
+        sum(fileline)-sum(comment_line)-sum(blank_line) as useful_line_total
+        from ${table_name}
+        where project_id = #{project_id}
+        group BY `type`
+        having sum(fileline)-sum(comment_line)-sum(blank_line) &gt; 0 ;
+    </select>
+
+
+    <!--validCoding.bean.ProjectContribution-->
+    <resultMap id="ProjectContribution" type="validCoding.bean.ProjectContribution" >
+        <result property="project_id" column="project_id" />
+        <result property="author" column="author" />
+        <result property="add_line" column="add_line_total" />
+        <result property="delete_line" column="delete_line_total" />
+        <result property="line_total" column="line_total" />
+        <!--<result property="useful_line" column="useful_line_line" />-->
+    </resultMap>
+    <!--查找某迭代，不同学生对项目的贡献-->
+    <select id="selectProjectContributionByIDAndIteration" resultMap="ProjectContribution">
+        select
+        project_id ,
+        author ,
+        sum(add_line) as add_line_total,
+        sum(delete_line) as delete_line_total,
+        sum(add_line)-sum(delete_line) as line_total
+        from valid_file
+        where project_id = #{project_id}
+        and valid_type = "核心代码文件"
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group BY author
+        having sum(add_line)-sum(delete_line) &gt; 0 ;
+    </select>
+
+
+
+
+    <!--validCoding.bean.StudentCode-->
+    <resultMap id="StudentCode" type="validCoding.bean.StudentCode" >
+        <result property="author" column="author" />
+        <result property="type" column="type" />
+        <result property="add_line" column="add_line_total" />
+        <result property="delete_line" column="delete_line_total" />
+        <result property="line_total" column="line_total" />
+        <!--<result property="useful_line" column="useful_line_line" />-->
+    </resultMap>
+    <!--查找某迭代的某个学生，不同作用文件的行数-->
+    <select id="selectStudentValidByAuthorAndIteration" resultMap="StudentCode">
+        select
+        author ,
+        `valid_type`as `type`,
+        sum(add_line) as add_line_total,
+        sum(delete_line) as delete_line_total,
+        sum(add_line)-sum(delete_line) as line_total
+        from valid_file
+        where author = #{author}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group BY `valid_type`
+        having sum(add_line)-sum(delete_line) &gt; 0 ;
+    </select>
+    <!--查找某迭代的某个学生，不同类型文件的行数-->
+    <select id="selectStudentCompositionByAuthorAndIteration" resultMap="StudentCode">
+        select
+        author ,
+        `type`,
+        sum(add_line) as add_line_total,
+        sum(delete_line) as delete_line_total,
+        sum(add_line)-sum(delete_line) as line_total
+        from valid_file
+        where author = #{author}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group BY `type`
+        having sum(add_line)-sum(delete_line) &gt; 0 ;
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

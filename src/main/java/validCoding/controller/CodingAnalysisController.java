@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import validCoding.service.CodeAggregationService;
+import validCoding.service.ValidCodeAggregationService;
 
 /**
  * @author  王珺宇 131250044
@@ -14,7 +14,7 @@ import validCoding.service.CodeAggregationService;
 public class CodingAnalysisController {
 
     @Autowired
-    private CodeAggregationService codeAggregationService;
+    private ValidCodeAggregationService validCodeAggregationService;
 
     /**
      * @return ： 显示的项目代码分析页面

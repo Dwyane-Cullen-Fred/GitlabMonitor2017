@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DailyCommit">
+
+    <!--每日提交-->
+    <resultMap id="DailyCommit" type="validCoding.bean.DailyCommit" >
+        <result property="commit_day" column="commit_day" />
+        <result property="day_add" column="day_add" />
+        <result property="day_delete" column="day_delete" />
+        <result property="day_total" column="daily_total" />
+    </resultMap>
+
+    <!--项目全部文件的每日提交-->
+    <select id="selectProjectDailyCommitByIDAndIterationWithNoScreenOut" resultMap="DailyCommit">
+        select
+        date(datetime) as commit_day,
+        sum(add_line) as day_add,
+        sum(delete_line) as day_delete,
+        sum(add_line)-sum(delete_line) as daily_total
+        from valid_file
+        where
+        project_id = #{project_id}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group by date(datetime)
+        having sum(add_line)-sum(delete_line) &gt; 0
+        order by date(datetime) asc ;
+    </select>
+    <!--项目去除某些类文件后的每日提交-->
+    <select id="selectProjectDailyCommitByIDAndIterationAndScreenOut" resultMap="DailyCommit">
+        select
+        date(datetime) as commit_day,
+        sum(add_line) as day_add,
+        sum(delete_line) as day_delete,
+        sum(add_line)-sum(delete_line) as daily_total
+        from valid_file
+        where
+        `valid_type` not in
+        <foreach collection="screenOut_list" item="screenOut_type" separator="," open="(" close=")">
+            #{screenOut_type}
+        </foreach>
+        and project_id = #{project_id}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group by date(datetime)
+        having sum(add_line)-sum(delete_line) &gt; 0
+        order by date(datetime) asc ;
+    </select>
+
+    <!--学生去全部文件的每日提交-->
+    <select id="selectStudentDailyCommitByAuthorAndIterationWithNoScreenOut" resultMap="DailyCommit">
+        select
+        date(datetime) as commit_day,
+        sum(add_line) as day_add,
+        sum(delete_line) as day_delete,
+        sum(add_line)-sum(delete_line) as daily_total
+        from valid_file
+        where
+        author = #{author}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group by date(datetime)
+        having sum(add_line)-sum(delete_line) &gt; 0
+        order by date(datetime) asc ;
+    </select>
+    <!--学生去除某些类文件后的每日提交-->
+    <select id="selectStudentDailyCommitByAuthorAndIterationAndScreenOut" resultMap="DailyCommit">
+        select
+        date(datetime) as commit_day,
+        sum(add_line) as day_add,
+        sum(delete_line) as day_delete,
+        sum(add_line)-sum(delete_line) as daily_total
+        from valid_file
+        where
+        `valid_type` not in
+        <foreach collection="screenOut_list" item="screenOut_type" separator="," open="(" close=")">
+            #{screenOut_type}
+        </foreach>
+        and author = #{author}
+        and date(datetime) &gt;= (SELECT str_to_date(deadline.start_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        and date(datetime) &lt; (SELECT str_to_date(deadline.end_day,'%Y-%m-%d') FROM deadline WHERE deadline.name = #{iteration} )
+        group by date(datetime)
+        having sum(add_line)-sum(delete_line) &gt; 0
+        order by date(datetime) asc ;
+    </select>
+
+
+
+
+
+</mapper>

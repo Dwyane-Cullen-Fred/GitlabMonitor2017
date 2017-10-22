@@ -9,7 +9,15 @@
         <mapper resource="org/mapper/studentCommit.xml" />
         <mapper resource="org/mapper/projectInfo.xml" />
 
-        <mapper resource="validCoding/mapper/CodeAggregation.xml" />
+
+        <!--local-->
+        <mapper resource="org/localMapper/fileMapper.xml" />
+        <mapper resource="org/localMapper/projectMapper.xml" />
+        <mapper resource="org/localMapper/CodeAggregation.xml" />
+
+        <mapper resource="validCoding/mapper/ValidCodeAggregation.xml" />
         <mapper resource="validCoding/mapper/Info.xml" />
+        <mapper resource="validCoding/mapper/DailyCommit.xml" />
+        <mapper resource="validCoding/mapper/ValidFile.xml" />
     </mappers>
 </configuration>
